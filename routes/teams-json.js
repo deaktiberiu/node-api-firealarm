@@ -72,32 +72,18 @@ router.delete("/delete", function (req, res, next) {
 /**
  *
  */
-router.put("/update", function (req, res, next) {
-  const id = req.body.id;
-  const functie = req.body.functie;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const telefon = req.body.telefon;
-  const prezent = req.body.prezent;
-  const isSafe = req.body.isSafe;
-  
-
+router.put("/update", function (req, res, next) { //// parse id aicia aici aici aici
   let content = fs.readFileSync(DATA_PATH);
   const persons = JSON.parse(content);
 
-  const contact = persons.find(function (person) {
-    return person.id == id;
-  });
-  if (contact) {
-    contact.functie = functie;
-    contact.firstName = firstName;
-    contact.lastName = lastName;
-    contact.telefon = telefon;
-    contact.prezent = prezent;
-    contact.isSafe = isSafe;
-  }
+  const newPersons = persons.map(function (person){
+    if (person.id === id) {
+      person = req.body;
+    }
+    return person;
+  })
 
-  content = JSON.stringify(persons, null, 2);
+  content = JSON.stringify(newPersons, null, 2);
   fs.writeFileSync(DATA_PATH, content);
 
   res.json({ success: true });
