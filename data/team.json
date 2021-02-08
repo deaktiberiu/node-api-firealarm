@@ -5,7 +5,7 @@
     "firstName": "Tiberiu",
     "lastName": "Deak",
     "telefon": "654311",
-    "prezent": false,
+    "prezent": true,
     "isSafe": false
   },
   {
