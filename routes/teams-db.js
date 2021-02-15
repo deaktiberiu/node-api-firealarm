@@ -11,18 +11,18 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "teams"
+  database: "firealarm"
 });
 
 /**
- * run this before first USAGE to create members TABLE
+ * run this before first USAGE to create firealarm TABLE
  */
 router.get("/install", function (req, res, next) {
   pool.getConnection(function (err, connection) {
     if (err) throw err;
     const sql = `
-    CREATE TABLE IF NOT EXISTS members (id INT NOT NULL AUTO_INCREMENT, functie TEXT NOT NULL, fullName TEXT NOT NULL, telefon TEXT NOT NULL, prezent TEXT NOT NULL, isSafe TEXT NOT NULL, PRIMARY KEY (id)) ENGINE = InnoDB;
-    `;
+    CREATE TABLE IF NOT EXISTS members (id INT NOT NULL AUTO_INCREMENT, functie TEXT NOT NULL, firstName TEXT NOT NULL, lastName TEXT NOT NULL, telefon TEXT NOT NULL, prezent BOOL NOT NULL, isSafe BOOL NOT NULL, PRIMARY KEY (id)) ENGINE = InnoDB;  
+    `;  // aici 
     connection.query(sql, function (err, results) {
       if (err) throw err;
       connection.release();
@@ -37,7 +37,7 @@ router.get("/install", function (req, res, next) {
 router.get("/", function (req, res, next) {
   pool.getConnection(function (err, connection) {
     if (err) throw err;
-    const sql = `SELECT id, functie, fullName, telefon,  prezent, isSafe FROM members`;
+    const sql = `SELECT id, functie, firstName, lastName, telefon,  prezent, isSafe FROM members`; // aici
     connection.query(sql, function (err, results) {
       if (err) throw err;
       connection.release();
@@ -50,17 +50,20 @@ router.get("/", function (req, res, next) {
  *
  */
 router.post("/create", function (req, res, next) {
+  console.log("in create ")
+
   const functie = req.body.functie;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const telefon = req.body.telefon;
-  const prezent = req.body.prezent;
-  const isSafe = req.body.isSafe;
-
+  const prezent = false;
+  const isSafe = false;
+ 
   pool.getConnection(function (err, connection) {
     if (err) throw err;
-    const sql = `INSERT INTO members (id, functie, firstName, lastName, telefon, prezent, isSafe) VALUES (NULL, ?, ?, ?);`;
+    const sql = `INSERT INTO members (id, functie, firstName, lastName, telefon, prezent, isSafe) VALUES (NULL, ?,?,?,?,?,?);`; // aici
     connection.query(sql, [functie, firstName, lastName, telefon, prezent, isSafe], function (err, results) {
+      
       if (err) throw err;
       const id = results.insertId;
       connection.release();
@@ -80,7 +83,7 @@ router.delete("/delete", function (req, res, next) {
 
   pool.getConnection(function (err, connection) {
     if (err) throw err;
-    const sql = `DELETE FROM members WHERE id=?`;
+    const sql = `DELETE FROM members WHERE id=?`;  // aici
     connection.query(sql, [id], function (err, results) {
       if (err) throw err;
       connection.release();
@@ -103,7 +106,7 @@ router.put("/update", function (req, res, next) {
 
   pool.getConnection(function (err, connection) {
     if (err) throw err;
-    const sql = `UPDATE members SET functie=?, firstName=?, lastName=?, telefon=?, prezent=?, isSafe=?,WHERE id=?`;
+    const sql = `UPDATE members SET functie=?, firstName=?, lastName=?, telefon=?, prezent=?, isSafe=?,WHERE id=?`; //aici
     connection.query(sql, [functie, firstName, lastName, telefon, prezent, isSafe, id], function (err, results) {
       if (err) throw err;
       connection.release();
