@@ -106,7 +106,7 @@ router.put("/update", function (req, res, next) {
 
   pool.getConnection(function (err, connection) {
     if (err) throw err;
-    const sql = `UPDATE members SET functie=?, firstName=?, lastName=?, telefon=?, prezent=?, isSafe=?,WHERE id=?`; //aici
+    const sql = `UPDATE members SET functie=?, firstName=?, lastName=?, telefon=?, prezent=?, isSafe=? WHERE id=?`; //aici
     connection.query(sql, [functie, firstName, lastName, telefon, prezent, isSafe, id], function (err, results) {
       if (err) throw err;
       connection.release();
